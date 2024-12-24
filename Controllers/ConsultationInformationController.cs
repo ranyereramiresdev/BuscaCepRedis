@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using apiRedis.Caching;
+using ApiRedis.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiRedis.Controllers
@@ -16,25 +17,17 @@ namespace ApiRedis.Controllers
             _cachingService = CachingService;
         }
 
-        public class AddressModel
-        {
-            public string cep { get; set; }
-            public string logradouro { get; set; }
-            public string complemento { get; set; }
-            public string unidade { get; set; }
-            public string bairro { get; set; }
-            public string localidade { get; set; }
-            public string uf { get; set; }
-            public string estado { get; set; }
-            public string regiao { get; set; }
-            public string ibge { get; set; }
-            public string gia { get; set; }
-            public string ddd { get; set; }
-            public string siafi { get; set; }
-        }
-
+        /// <summary>
+        /// Busca cep no cache, se não achar, busca no ViaCep
+        /// </summary>
+        /// <param name="cep"></param>
+        /// <returns>Endereço referente ao cep informado</returns>
+        /// <response code="200">Sucesso</response>
+        /// <response code="404">Não encontrado</response>
         [HttpGet, Route("Buscar-Cep")]
-        public async Task<IActionResult> GetEndereco([FromQuery] string cep)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(AddressModel))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> BuscarCep([FromQuery] string cep)
         {
             var viaCepUrl = $"https://viacep.com.br/ws/{cep}/json/";
             try
@@ -51,7 +44,7 @@ namespace ApiRedis.Controllers
                     var response = await _httpClient.GetAsync(viaCepUrl);
 
                     if (!response.IsSuccessStatusCode)
-                        return StatusCode((int)response.StatusCode, "Erro ao consultar o ViaCEP.");
+                        return StatusCode(404, "Cep não encontrado.");
 
                     var endereco = await response.Content.ReadAsStringAsync();
                     await _cachingService.SetAsync(cep, endereco);

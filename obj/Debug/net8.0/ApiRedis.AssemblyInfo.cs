@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ApiRedis")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f93da65f991df87248fc0ab0a593e95ba81c3c69")]
 [assembly: System.Reflection.AssemblyProductAttribute("ApiRedis")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ApiRedis")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
